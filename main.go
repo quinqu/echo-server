@@ -7,7 +7,6 @@ import (
 	"net/rpc"
 )
 
-
 func (l *Listener) Echo(message string, reply *string) error {
 	*reply = message
 	return nil
