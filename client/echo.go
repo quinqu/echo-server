@@ -23,6 +23,7 @@ func main() {
 	kingpin.MustParse(app.Parse(os.Args[1:]))
 
 	var buf bytes.Buffer
+
 	message := strings.Join(*send, " ")
 	buf.WriteString(message)
 	host := "http://localhost:" + *port + "/echo"
@@ -32,12 +33,13 @@ func main() {
 		log.Fatal(err)
 	}
 	defer resp.Body.Close()
+
 	serverOutput := bufio.NewScanner(resp.Body)
 
 	for serverOutput.Scan() {
+		// compare response with request
 		if serverOutput.Text() != message {
-			fmt.Println("The server did not echo your request, oops!, Got: ")
-
+			fmt.Println("response is not the same as your message, oops!, got: ")
 		}
 		fmt.Println(serverOutput.Text())
 	}
