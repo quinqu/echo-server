@@ -14,22 +14,34 @@ The client should verify the response is equivalent to the request, and print th
 The client should provide cli flags or arguments to control its behavior.
 
 #### Notes: 
-I have no plans on implementing authentication or authorization yet (depends on how much time I have) 
+I have no plans on implementing authentication or authorization yet (depends on how much time I have)  
 
-## Concurrency: 
-- I will use http.Serve (in the net/http library) which creates a new service goroutine for each incoming HTTP connection https://golang.org/src/net/http/server.go
+----
 
+### Example run: `echo --port=8000 --message="hello world"`
 
-## Server:
+### Response: "hello world" 
+
+---- 
+
+### Concurrency: 
+- Uses http.Serve (in the net/http library) which creates a new service goroutine for each incoming HTTP connection https://golang.org/src/net/http/server.go so multiple clients can connect to the server 
+
+### Authorization 
+- JWT's to secure the API
+    - https://github.com/dgrijalva/jwt-go 
+
+### Server:
 - Packages:
-    - https://golang.org/pkg/net/http/ (create server)
+    - https://golang.org/pkg/net/http/ 
+        - to create the server 
     - API mechanism: HTTP
     - Server listening on port 8000 for incoming client requests
 
 
-## Client: 
+### Client: 
 - Packages: 
-    - https://github.com/alecthomas/kingpin for CLI     
-    - https://golang.org/pkg/net/http/ (access endpoint)
+    - https://github.com/alecthomas/kingpin for cli flags      
+    - https://golang.org/pkg/net/http/ so client can connect to endpoint
     - I will verify the response is valid simply by comparing the request and response 
 
