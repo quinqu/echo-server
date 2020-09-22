@@ -13,11 +13,10 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-var signingKey = []byte("secret") //from env variables os.Get("MY_JWT_TOKEN")
+var signingKey = []byte(os.Getenv("JWT_TOKEN"))
 
 func GenerateJWT() (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
-	claims := token.Claims.(jwt.MapClaims)
 
 	tokenString, err := token.SignedString(signingKey)
 

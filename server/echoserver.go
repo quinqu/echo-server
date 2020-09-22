@@ -6,11 +6,12 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
-var signingKey = []byte("secret")
+var signingKey = []byte(os.Getenv("JWT_TOKEN"))
 
 func echo(w http.ResponseWriter, r *http.Request) {
 	buf := new(bytes.Buffer)
