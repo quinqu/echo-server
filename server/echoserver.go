@@ -16,21 +16,14 @@ func echo(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, newStr)
 }
 
-type Listener int
-
 func main() {
 
-	listener, err := net.Listen("tcp", ":8000") // open the connection
+	listener, err := net.Listen("tcp", ":8000") 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Serve accepts incoming HTTP connections on the listener,
-	// creating a new service goroutine for each. The service goroutines
-	// read requests and then call handler to reply to them.
-
 	http.HandleFunc("/echo", echo)
-
 	log.Println("Listening on localhost:8080")
 
 	err = http.Serve(listener, nil)
