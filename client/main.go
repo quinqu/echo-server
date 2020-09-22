@@ -17,7 +17,7 @@ import (
 // )
 
 func main() {
-
+	fmt.Println("Welcome to echo server!")
 	input := bufio.NewScanner(os.Stdin)
 	var buf bytes.Buffer
 	
@@ -30,11 +30,15 @@ func main() {
 			log.Fatal(err)
 		}
 		defer resp.Body.Close()
+		serverOutput := bufio.NewScanner(resp.Body)
 
-		input := bufio.NewScanner(resp.Body)
+		for serverOutput.Scan() {	
+			if serverOutput.Text() != buf.String() {
+				fmt.Println("The server did not echo your request, oops!")
+				continue
+			}
 
-		for input.Scan() {
-			fmt.Println(input.Text())
+			fmt.Println(serverOutput.Text())
 		}
 		if err := input.Err(); err != nil {
 			log.Fatal(err)
