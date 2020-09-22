@@ -1,40 +1,43 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"fmt"
 	"log"
-	"net/rpc"
+	"net/http"
 	"os"
-	"strings"
-
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-var (
-	app = kingpin.New("echo", " connect to the echo server, make a user specified request, and receive the server’s response.")
+// var (
+// 	app = kingpin.New("echo", " connect to the echo server, make a user specified request, and receive the server’s response.")
 
-	send    = app.Command("send", "send a request to server")
-	message = send.Arg("message", "a (message) request to send to server").Required().Strings()
-)
+// 	send    = app.Command("send", "send a request to server")
+// 	message = send.Arg("message", "a (message) request to send to server").Required().Strings()
+// )
 
 func main() {
-	var reply string
-	var client *rpc.Client
-	var err error
-	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
 
-	case send.FullCommand():
-		client, err = rpc.DialHTTP("tcp", "localhost:8000")
+	input := bufio.NewScanner(os.Stdin)
+	var buf bytes.Buffer
+	
+	for input.Scan() {
+		buf.WriteString(input.Text())
+
+		resp, err := http.Post("http://localhost:8000/echo", "", &buf)
 
 		if err != nil {
-			log.Fatal("dialing: ", err)
+			log.Fatal(err)
 		}
-		echo := strings.Join(*message, " ")
-		client.Call("Listener.Echo", echo, &reply)
-		fmt.Println(reply)
+		defer resp.Body.Close()
+
+		input := bufio.NewScanner(resp.Body)
+
+		for input.Scan() {
+			fmt.Println(input.Text())
+		}
+		if err := input.Err(); err != nil {
+			log.Fatal(err)
+		}
 	}
-
-	//DialHTTP connects to an HTTP RPC server at the specified network
-	//address listening on the default HTTP RPC path.
-
 }
