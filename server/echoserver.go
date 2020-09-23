@@ -1,15 +1,18 @@
 package main
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
 	"os"
-	
+
 	"gopkg.in/alecthomas/kingpin.v2"
 )
+
 
 func echo(w http.ResponseWriter, r *http.Request) {
 	var response string
@@ -21,12 +24,27 @@ func echo(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, response)
 }
 
+func generateToken(n int) (string, error) {
+	bytes := make([]byte, n)
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(bytes), nil
+}
+
 var (
 	app  = kingpin.New("echoserver", "echo server will echo a clients request")
 	port = app.Flag("port", "port to bind to").Required().String()
 )
+var token string
 
 func main() {
+
+	token, err := generateToken(20)
+	if err != nil {
+		log.Fatal("unable to generate token", err)
+	}
+	fmt.Println(token)
 	kingpin.MustParse(app.Parse(os.Args[1:]))
 	serverPort := *port
 	listener, err := net.Listen("tcp", ":"+serverPort)
