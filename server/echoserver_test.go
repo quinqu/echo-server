@@ -21,6 +21,6 @@ func TestEcho(t *testing.T) {
 	bodyBytes, err := ioutil.ReadAll(rr.Body)
 	response := string(bodyBytes)
 	if response != message {
-		t.Errorf("response err: got %v, want: %v", response, message)
+		t.Errorf("response does not match request: got %v, want: %v", response, message)
 	}
 }
