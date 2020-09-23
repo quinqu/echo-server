@@ -28,5 +28,8 @@ func main() {
 	defer resp.Body.Close()
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	serverOutput := string(bodyBytes)
+	if serverOutput != message {
+		fmt.Println(*host + " did not echo your request, oops! got:")
+	}
 	fmt.Println(serverOutput)
 }
