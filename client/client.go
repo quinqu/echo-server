@@ -16,7 +16,7 @@ var (
 	host = app.Flag("host", "host to connect to").Required().String()
 	send = app.Flag("message", "send a request to server").Required().Strings()
 	token = app.Flag("token", "authentication token").Required().String()
-	//flag for token 
+	
 )
 
 

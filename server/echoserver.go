@@ -24,6 +24,21 @@ func echo(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, response)
 }
 
+func isAuthorized(endpoint func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Header["Token"] != nil {
+			if r.Header["Token"][0] == authToken {
+				fmt.Println("authorized")
+				endpoint(w, r)
+			}
+				
+		} else {
+			fmt.Fprintf(w, "not authorized")
+		}
+	})
+
+}
+
 func generateToken(n int) (string, error) {
 	bytes := make([]byte, n)
 	if _, err := rand.Read(bytes); err != nil {
@@ -36,7 +51,7 @@ var (
 	app  = kingpin.New("echoserver", "echo server will echo a clients request")
 	port = app.Flag("port", "port to bind to").Required().String()
 )
-var token string
+var authToken string
 
 func main() {
 
@@ -44,14 +59,15 @@ func main() {
 	if err != nil {
 		log.Fatal("unable to generate token", err)
 	}
-	fmt.Println(token)
+	authToken = token
+	fmt.Println(authToken)
 	kingpin.MustParse(app.Parse(os.Args[1:]))
 	serverPort := *port
 	listener, err := net.Listen("tcp", ":"+serverPort)
 	if err != nil {
 		log.Fatal(err)
 	}
-	http.HandleFunc("/echo", echo)
+	http.HandleFunc("/echo", isAuthorized(echo))
 	log.Println("Listening on localhost:" + serverPort)
 	err = http.Serve(listener, nil)
 	if err != nil {
