@@ -15,16 +15,31 @@ var (
 	app  = kingpin.New("client", "send messages to a server")
 	host = app.Flag("host", "host to connect to").Required().String()
 	send = app.Flag("message", "send a request to server").Required().Strings()
+	token = app.Flag("token", "authentication token").Required().String()
+	//flag for token 
 )
+
+
 
 func main() {
 	kingpin.MustParse(app.Parse(os.Args[1:]))
 	message := strings.Join(*send, " ")
 	reader := strings.NewReader(message)
-	resp, err := http.Post(*host+"/echo", "", reader)
+
+	// Create a new request using http
+	req, err := http.NewRequest("POST", *host + "/echo", reader)
+
+	// add authorization header to the req
+	req.Header.Add("Token", *token)
+
+	// Send req using http Client
+	client := &http.Client{}
+	resp, err := client.Do(req)
+
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
+
 	defer resp.Body.Close()
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	serverOutput := string(bodyBytes)
