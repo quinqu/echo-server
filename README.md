@@ -13,30 +13,25 @@ The client command should be able to connect to the echo server, make a user spe
 The client should verify the response is equivalent to the request, and print the response.
 The client should provide cli flags or arguments to control its behavior.
 
-#### Notes: 
-I have no plans on implementing authentication or authorization yet (depends on how much time I have) 
-
-### Implementation: 
-
-#### Concurrency: 
-I will use http.Serve (in the net/http library) which creates a new service goroutine for each incoming HTTP connection https://golang.org/src/net/http/server.go
+## Authentication: 
+- Generate random token in `echoserver.go` and print out to terminal 
+- Client will need to get token from server and pass it back in the header to access the endpoint 
 
 
-#### Server:
+## Concurrency: 
+- I will use http.Serve (in the net/http library) which creates a new service goroutine for each incoming HTTP connection https://golang.org/src/net/http/server.go
+
+
+## Server:
 - Packages:
-    - https://golang.org/pkg/net/http/
-    - https://golang.org/pkg/net/rpc/ 
+    - https://golang.org/pkg/net/http/ (create server)
     - API mechanism: HTTP
     - Server listening on port 8000 for incoming client requests
 
 
-#### Client: 
-
+## Client: 
 - Packages: 
-    - https://github.com/alecthomas/kingpin for CLI 
-    - https://golang.org/pkg/net/rpc/ to access echo endpoint 
+    - https://github.com/alecthomas/kingpin for CLI     
+    - https://golang.org/pkg/net/http/ (access endpoint)
     - I will verify the response is valid simply by comparing the request and response 
-
-
-
 
