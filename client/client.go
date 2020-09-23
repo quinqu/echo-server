@@ -1,8 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -26,11 +26,7 @@ func main() {
 		log.Fatal(err)
 	}
 	defer resp.Body.Close()
-	serverOutput := bufio.NewScanner(resp.Body)
-	for serverOutput.Scan() {
-		if serverOutput.Text() != message {
-			fmt.Println("the server did not echo your request, oops!, got: ")
-		}
-		fmt.Println(serverOutput.Text())
-	}
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	serverOutput := string(bodyBytes)
+	fmt.Println(serverOutput)
 }

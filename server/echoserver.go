@@ -7,7 +7,7 @@ import (
 	"net"
 	"net/http"
 	"os"
-
+	
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -23,7 +23,7 @@ func echo(w http.ResponseWriter, r *http.Request) {
 
 var (
 	app  = kingpin.New("echoserver", "echo server will echo a clients request")
-	port = app.Flag("port", "server to connect to ex: --port=8000").Required().String()
+	port = app.Flag("port", "port to bind to").Required().String()
 )
 
 func main() {
