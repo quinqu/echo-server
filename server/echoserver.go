@@ -13,13 +13,14 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
+var authToken string
 
 func echo(w http.ResponseWriter, r *http.Request) {
 	var response string
 	out, err := ioutil.ReadAll(r.Body)
 	response = string(out)
 	if err != nil {
-		response = fmt.Sprintf("there was error: " + err.Error())
+		response = fmt.Sprintf("there was error reading request: " + err.Error())
 	}
 	fmt.Fprintf(w, response)
 }
@@ -31,7 +32,7 @@ func isAuthorized(endpoint func(http.ResponseWriter, *http.Request)) func(http.R
 				fmt.Println("authorized")
 				endpoint(w, r)
 			}
-				
+
 		} else {
 			fmt.Fprintf(w, "not authorized")
 		}
@@ -51,10 +52,8 @@ var (
 	app  = kingpin.New("echoserver", "echo server will echo a clients request")
 	port = app.Flag("port", "port to bind to").Required().String()
 )
-var authToken string
 
 func main() {
-
 	token, err := generateToken(20)
 	if err != nil {
 		log.Fatal("unable to generate token", err)
