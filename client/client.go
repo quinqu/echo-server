@@ -12,34 +12,47 @@ import (
 )
 
 var (
-	app   = kingpin.New("client", "send messages to a server")
-	host  = app.Flag("host", "host to connect to").Required().String()
-	send  = app.Flag("message", "send a request to server").Required().Strings()
-	token = app.Flag("token", "authentication token").Required().String()
+	app = kingpin.New("client", "connect to server")
+
+	send    = app.Command("send", "send message to server")
+	host    = send.Flag("host", "host to connect to").Required().String()
+	message = send.Flag("message", "send a request to server").Required().Strings()
+	token   = app.Flag("token", "authentication token").Required().String()
 )
 
 func main() {
-	kingpin.MustParse(app.Parse(os.Args[1:]))
-	message := strings.Join(*send, " ")
-	reader := strings.NewReader(message)
+	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
 
-	req, err := http.NewRequest("POST", *host+"/echo", reader)
+	case send.FullCommand():
+		requestMessage := strings.Join(*message, " ")
+		reader := strings.NewReader(requestMessage)
+		endpoint := *host + "/echo"
+		req, err := http.NewRequest("POST", endpoint, reader)
 
-	// add token header to the req
-	req.Header.Add("Token", *token)
+		req.Header.Add("Token", *token)
+		client := &http.Client{}
+		resp, err := client.Do(req)
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+		if err != nil {
+			log.Println(err)
+		}
 
-	if err != nil {
-		log.Println(err)
+		defer resp.Body.Close()
+
+		if resp.StatusCode != http.StatusOK {
+			fmt.Println("Not OK HTTP status:", resp.StatusCode)
+			return
+		}
+
+		bodyBytes, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			log.Fatalf("could not read response: %v", err)
+		}
+
+		serverOutput := string(bodyBytes)
+		if serverOutput != requestMessage {
+			fmt.Println(*host + " did not echo your request, oops! got:")
+		}
+		fmt.Println(serverOutput)
 	}
-
-	defer resp.Body.Close()
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	serverOutput := string(bodyBytes)
-	if serverOutput != message {
-		fmt.Println(*host + " did not echo your request, oops! got:")
-	}
-	fmt.Println(serverOutput)
 }
