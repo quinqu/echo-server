@@ -13,6 +13,43 @@ The client command should be able to connect to the echo server, make a user spe
 The client should verify the response is equivalent to the request, and print the response.
 The client should provide cli flags or arguments to control its behavior.
 
+## Quickstart: 
+
+```
+$ git clone https://github.com/quinqu/echo-server.git 
+$ cd echo-server 
+```
+
+To avoid using `./binary-name` to execute the binary, copy the binary file to your `/usr/local/bin/` path.
+
+Echo server start: 
+*creates server that serves traffic over https* 
+  
+```
+$ cd server
+
+// create the binary
+$ go build echoserver.go 
+
+// input port to bind to
+$ echoserver --port=8000
+
+// upon initialization, server will print out an auth token
+Authentication token:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+Client request: 
+
+```
+$ cd client 
+
+// create the binary
+$ go build client.go 
+
+// obtain token from server output
+$ client send --host=https://localhost:8000 --message="hello world" --token=<TOKEN>
+
+```
 
 ## Server:
 - Packages:
@@ -25,11 +62,8 @@ The client should provide cli flags or arguments to control its behavior.
 - Generate authentication token on server startup using the [cryto/rand](https://golang.org/pkg/crypto/rand/) package 
 
 ### Concurrency: 
-- Using `http.ListenAndServeTLS` function from the [net/http](https://golang.org/pkg/net/http/) which returns [http.Serve](https://golang.org/src/net/http/server.go) and this method creates a new service goroutine for each incoming connection 
+- Using `http.ListenAndServeTLS` function from the [net/http](https://golang.org/pkg/net/http/) which returns `http.Serve` and this method creates a new service goroutine for each incoming connection, [source code](https://golang.org/src/net/http/server.go)
 
-Start an echo server example: 
-
- `$ echoserver --port=8000`
 
 
 
@@ -38,10 +72,6 @@ Start an echo server example:
     - https://github.com/alecthomas/kingpin     
     - https://golang.org/pkg/net/http/ 
 - Response is verified by simply  comparing the request and response 
-
-Connect and request example: 
-
-  `$ client send --host=https:localhost:8000 --message="echo me" --token=<TOKEN>`
 
 
 
