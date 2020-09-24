@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -29,26 +28,31 @@ func main() {
 		endpoint := *host + "/echo"
 		req, err := http.NewRequest("POST", endpoint, reader)
 		if err != nil {
-			fmt.Println("request could not be initiated: ", err)
-			return 
+			fmt.Println("could not resolve host: ", err)
+			os.Exit(1)
+			return
 		}
 		req.Header.Add("Token", *token)
 		client := &http.Client{}
 		resp, err := client.Do(req)
 		if err != nil {
-			fmt.Println("response error: ", err)
-			return 
+			fmt.Println("request failed: ", err)
+			os.Exit(1)
+			return
 		}
 
 		defer resp.Body.Close()
 		if resp.StatusCode != http.StatusOK {
 			fmt.Println("Not OK HTTP status:", resp.StatusCode)
+			os.Exit(1)
 			return
 		}
 
 		bodyBytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			log.Fatalf("could not read body: %v", err)
+			fmt.Println("could not read body: ", err)
+			os.Exit(1)
+			return
 		}
 
 		serverOutput := string(bodyBytes)
@@ -56,5 +60,8 @@ func main() {
 			fmt.Println(*host + " did not echo your request, oops! got:")
 		}
 		fmt.Println(serverOutput)
+	default:
+
+		fmt.Println("command not given")
 	}
 }

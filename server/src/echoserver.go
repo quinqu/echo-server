@@ -30,7 +30,7 @@ func isAuthorized(endpoint func(http.ResponseWriter, *http.Request)) func(http.R
 		if r.Header["Token"] != nil {
 			if r.Header["Token"][0] == authToken {
 				w.WriteHeader(http.StatusOK)
-				fmt.Println("authorized")
+				log.Println("authorized")
 				endpoint(w, r)
 			} else {
 				w.WriteHeader(http.StatusUnauthorized)
