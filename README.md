@@ -25,7 +25,7 @@ The client should provide cli flags or arguments to control its behavior.
 - Generate authentication token on server startup using the [cryto/rand](https://golang.org/pkg/crypto/rand/) package 
 
 ### Concurrency: 
-- Using `http.ListenAndServeTLS` function from the [net/http](https://golang.org/pkg/net/http/) which is built on top of [http.Serve](https://golang.org/src/net/http/server.go) and this method creates a new service goroutine for each incoming connection 
+- Using `http.ListenAndServeTLS` function from the [net/http](https://golang.org/pkg/net/http/) which returns [http.Serve](https://golang.org/src/net/http/server.go) and this method creates a new service goroutine for each incoming connection 
 
 Start an echo server example: 
 
