@@ -20,10 +20,9 @@ $ git clone https://github.com/quinqu/echo-server.git
 $ cd echo-server 
 ```
 
-To avoid using `./binary-name` to execute the binary, copy the binary file to your `/usr/local/bin/` path.
+*To avoid using `./binary-name` to execute the binary, copy the binary file to your `/usr/local/bin/` path.*
 
-Echo server start: 
-*creates server that serves traffic over https* 
+Echo server start (creates server that serves traffic over https):
   
 ```
 // from project root
