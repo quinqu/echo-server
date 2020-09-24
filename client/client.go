@@ -28,17 +28,19 @@ func main() {
 		reader := strings.NewReader(requestMessage)
 		endpoint := *host + "/echo"
 		req, err := http.NewRequest("POST", endpoint, reader)
-
+		if err != nil {
+			fmt.Println("request could not be initiated: ", err)
+			return 
+		}
 		req.Header.Add("Token", *token)
 		client := &http.Client{}
 		resp, err := client.Do(req)
-
 		if err != nil {
-			log.Println(err)
+			fmt.Println("response error: ", err)
+			return 
 		}
 
 		defer resp.Body.Close()
-
 		if resp.StatusCode != http.StatusOK {
 			fmt.Println("Not OK HTTP status:", resp.StatusCode)
 			return
@@ -46,7 +48,7 @@ func main() {
 
 		bodyBytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			log.Fatalf("could not read response: %v", err)
+			log.Fatalf("could not read body: %v", err)
 		}
 
 		serverOutput := string(bodyBytes)
