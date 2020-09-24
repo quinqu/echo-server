@@ -39,7 +39,7 @@ func isAuthorized(endpoint func(http.ResponseWriter, *http.Request)) func(http.R
 
 		} else {
 			w.WriteHeader(http.StatusUnauthorized)
-			fmt.Fprintf(w, "not authorized")
+			fmt.Fprintf(w, "token missing, unauthorized")
 		}
 	})
 
