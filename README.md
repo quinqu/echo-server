@@ -29,9 +29,9 @@ The client should provide cli flags or arguments to control its behavior.
 
 Start an echo server example: 
 
-> $ `echoserver --port=8000`
+ `$ echoserver --port=8000`
 
----
+
 
 ## Client: 
 - Packages: 
@@ -41,7 +41,7 @@ Start an echo server example:
 
 Connect and request example: 
 
-> $ `client send --host=https:localhost:8000 --message="echo me" --token=<TOKEN>`
+  `$ client send --host=https:localhost:8000 --message="echo me" --token=<TOKEN>`
 
----
+
 
