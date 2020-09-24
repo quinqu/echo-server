@@ -26,7 +26,8 @@ Echo server start:
 *creates server that serves traffic over https* 
   
 ```
-$ cd server
+// from project root
+$ cd server/src
 
 // create the binary
 $ go build echoserver.go 
@@ -41,6 +42,7 @@ Authentication token:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Client request: 
 
 ```
+// from project root
 $ cd client 
 
 // create the binary
@@ -56,16 +58,23 @@ $ client send --host=https://localhost:8000 --message="hello world" --token=<TOK
     - https://github.com/alecthomas/kingpin
 - Upon initialization of the server, a port to bind to is required 
 - Encryption using TLS to secure traffic through the network 
-- Testing 
+- Used go's standard package for testing 
     - Testing the output of the echo endpoint
         - The test port is defaulted to 8000, start server on that port (follow server quickstart instructions above)
-        - Run:  `go test echoserver_test.go`
+        - `cd` from project root into `server/src/` and run:  `go test echoserver_test.go echoserver.go`
 ### Authentication: 
 - Generate authentication token on server startup using the [cryto/rand](https://golang.org/pkg/crypto/rand/) package 
 
 ### Concurrency: 
 - Using `http.ListenAndServeTLS` function from the [net/http](https://golang.org/pkg/net/http/) which returns `http.Serve` and this method creates a new service goroutine for each incoming connection, [source code](https://golang.org/src/net/http/server.go)
 - Verify concurrency with `multipleclients.go` in the project root 
+    - It will create 1000 requests running at the same time 
+    - The port is defaulted to 8000, start server on that port (follow server quickstart instructions above)
+
+```
+// run requests with token generated from server 
+$ go run multipleclients.go --token=<token>
+```
 
 
 
