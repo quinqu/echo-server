@@ -16,7 +16,7 @@ func TestEcho(t *testing.T) {
 		t.Fatal(err)
 	}
 	rr := httptest.NewRecorder()
-	
+
 	echo(rr, req)
 	bodyBytes, err := ioutil.ReadAll(rr.Body)
 	if err != nil {
