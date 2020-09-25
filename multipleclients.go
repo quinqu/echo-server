@@ -16,23 +16,26 @@ import (
 func main() {
 	var wg sync.WaitGroup
 	kingpin.MustParse(app.Parse(os.Args[1:]))
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < *requests; i++ {
 		wg.Add(1)
-
 		go worker(&wg, *token)
 	}
 	wg.Wait()
 }
 
-var app = kingpin.New("clients", "connect to server")
-var token = app.Flag("token", "authentication token").Required().String()
+var (
+	app      = kingpin.New("clients", "connect to server")
+	token    = app.Flag("token", "authentication token").Required().String()
+	host     = app.Flag("host", "host to connect to").Required().String()
+	requests = app.Flag("requests", "number of requests to send concurrently").Default("500").Int()
+)
 
 func worker(wg *sync.WaitGroup, t string) {
 	defer wg.Done()
 	requestMessage := "hello test"
 	reader := strings.NewReader(requestMessage)
 
-	req, err := http.NewRequest("POST", "https://localhost:8000/echo", reader)
+	req, err := http.NewRequest("POST", *host+"/echo", reader)
 	if err != nil {
 		fmt.Println("could not resolve host: ", err)
 	}
