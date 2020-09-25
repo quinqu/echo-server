@@ -53,8 +53,8 @@ $ client send --host=https://localhost:8000 --message="hello world" --token=<TOK
 
 ## Server:
 - Packages:
-    - https://golang.org/pkg/net/http/ 
-    - https://github.com/alecthomas/kingpin
+    - Server implementation: https://golang.org/pkg/net/http/ 
+    - CL and flag parser: https://github.com/alecthomas/kingpin
 - Upon initialization of the server, a port to bind to is required 
 - Encryption using TLS to secure traffic through the network 
 - Used go's standard package for testing 
@@ -80,9 +80,9 @@ $ go run multipleclients.go --token=<token> --host=<host> --requests=<num>
 
 ## Client: 
 - Packages: 
-    - https://github.com/alecthomas/kingpin     
-    - https://golang.org/pkg/net/http/ 
+    - CL and flag parser: https://github.com/alecthomas/kingpin     
+    - Client implementation: https://golang.org/pkg/net/http/ 
 - Response is verified by simply  comparing the request and response 
-
+- 
 
 
