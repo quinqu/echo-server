@@ -67,12 +67,12 @@ $ client send --host=https://localhost:8000 --message="hello world" --token=<TOK
 ### Concurrency: 
 - Using `http.ListenAndServeTLS` function from the [net/http](https://golang.org/pkg/net/http/) which returns `http.Serve` and this method creates a new service goroutine for each incoming connection, [source code](https://golang.org/src/net/http/server.go)
 - Verify concurrency with `multipleclients.go` in the project root 
-    - It will create 1000 requests running at the same time 
-    - The port is defaulted to 8000, start server on that port (follow server quickstart instructions above)
+    - Follow quickstart above to start server 
+    - Specify the amount of concurrent requests and the host 
 
 ```
 // run requests with token generated from server 
-$ go run multipleclients.go --token=<token>
+$ go run multipleclients.go --token=<token> --host=<host> --requests=<num>
 ```
 
 
